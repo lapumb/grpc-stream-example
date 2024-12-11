@@ -20,15 +20,19 @@ import 'example.pb.dart' as $0;
 
 export 'example.pb.dart';
 
-@$pb.GrpcServiceName('Example')
-class ExampleClient extends $grpc.Client {
+@$pb.GrpcServiceName('ExampleService')
+class ExampleServiceClient extends $grpc.Client {
   static final _$serverToClientStream =
       $grpc.ClientMethod<$0.Empty, $0.ExampleMessage>(
-          '/Example/ServerToClientStream',
+          '/ExampleService/ServerToClientStream',
           ($0.Empty value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $0.ExampleMessage.fromBuffer(value));
+  static final _$pingServer = $grpc.ClientMethod<$0.Empty, $0.Empty>(
+      '/ExampleService/PingServer',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
-  ExampleClient($grpc.ClientChannel channel,
+  ExampleServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
       $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
@@ -39,11 +43,16 @@ class ExampleClient extends $grpc.Client {
         _$serverToClientStream, $async.Stream.fromIterable([request]),
         options: options);
   }
+
+  $grpc.ResponseFuture<$0.Empty> pingServer($0.Empty request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$pingServer, request, options: options);
+  }
 }
 
-@$pb.GrpcServiceName('Example')
+@$pb.GrpcServiceName('ExampleService')
 abstract class ExampleServiceBase extends $grpc.Service {
-  $core.String get $name => 'Example';
+  $core.String get $name => 'ExampleService';
 
   ExampleServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.Empty, $0.ExampleMessage>(
@@ -53,6 +62,13 @@ abstract class ExampleServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($0.ExampleMessage value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
+        'PingServer',
+        pingServer_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Stream<$0.ExampleMessage> serverToClientStream_Pre(
@@ -60,6 +76,12 @@ abstract class ExampleServiceBase extends $grpc.Service {
     yield* serverToClientStream(call, await request);
   }
 
+  $async.Future<$0.Empty> pingServer_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return pingServer(call, await request);
+  }
+
   $async.Stream<$0.ExampleMessage> serverToClientStream(
       $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.Empty> pingServer($grpc.ServiceCall call, $0.Empty request);
 }
