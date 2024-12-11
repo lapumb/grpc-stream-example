@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+service Example {
+  rpc ServerToClientStream(Empty) returns (stream ExampleMessage) {}
+}
+
+message Empty {}
+
+message ExampleMessage {
+  int32 value = 1;
+}
